@@ -1,12 +1,11 @@
-# Blatt - AI-Powered Academic Paper Search Assistant
+# Blatt (Leaf) - AI-Powered Academic Paper Search Assistant
 
 An all-in-one AI platform for literature search and the visualization of functional relationships between papers.
+Collect literature like collecting leaves 🍃
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Flask](https://img.shields.io/badge/flask-3.0.0-green.svg)](https://flask.palletsprojects.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-**Blatt (Leaf)** - Collect literature like collecting leaves 🍃
 
 
 ## ✨ Core Features
@@ -52,7 +51,7 @@ nano .env  # or use other editor
 
 5. **Initialize database**
 ```bash
-python -c "from src.models.database import Database; Database('data/ye.db')"
+python -c "from src.models.database import Database; Database('data/blatt.db')"
 ```
 
 6. **Run application**
@@ -101,7 +100,7 @@ By default, only papers with Priority ≥ 4 are exported.
 ## 🏗️ Project Structure
 
 ```
-Ye/
+Blatt/
 ├── app.py                  # Flask application entry point
 ├── config.py               # Configuration management
 ├── requirements.txt        # Dependency list
