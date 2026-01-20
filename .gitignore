@@ -1,0 +1,109 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+
+.env
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+
+exports/
+data/cache/
+
+
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+.DS_Store
+
+
+.ipynb_checkpoints
+
+
+.python-version
+
+
+tmp/
+temp/
+*.tmp
+
+
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Papers and documents (private)
+papers/
+*.pdf
+*.pptx
+*.docx
+
+# Images 
+*.png
+
+# Windows Zone.Identifier files
+*:Zone.Identifier
+
+# Backup files
+*BACKUP*.txt
+
+# Test generated files
+test_graphs/
+
+# Development/debug files
+analyze_searches.py
+demo_multi_source.py
+PRIORITY_5_QUALITY_ANALYSIS.md
+static/test_background.html
+static/autumn-palette.svg
+
+# Internal documentation (keep README.md)
+*.md
+!README.md
+docs/
+
+# Unit tests
+tests/

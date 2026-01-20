@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Blatt - Search Papers{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <!-- Page title -->
+        <div class="text-center mb-2 fade-in" style="margin-top: -0.5rem;">
+            <h1 class="mb-1 title-with-leaf">
+                Blatt <span class="static-leaf">🍃</span>
+            </h1>
+            <p class="subtitle-medium mb-1">
+                Academic Paper Search Assistant — Like collecting leaves, collecting papers
+            </p>
+        </div>
+
+        <!-- Search form -->
+        <div class="card shadow-sm fade-in">
+            <div class="card-body p-4">
+                <form id="searchForm" action="{{ url_for('search') }}" method="POST">
+                    <!-- Keywords input -->
+                    <div class="mb-4">
+                        <label for="keywords" class="form-label">
+                            <i class="bi bi-search"></i> Research Keywords
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            class="form-control form-control-lg"
+                            id="keywords"
+                            name="keywords"
+                            placeholder="e.g., autonomous driving simulation"
+                            required
+                            autofocus
+                        >
+                        <div class="form-text">
+                            Enter your research topic or keywords
+                        </div>
+                    </div>
+
+                    <!-- Description input -->
+                    <div class="mb-4">
+                        <label for="description" class="form-label">
+                            <i class="bi bi-card-text"></i> Additional Description
+                            <span class="text-muted">(Optional)</span>
+                        </label>
+                        <textarea
+                            class="form-control"
+                            id="description"
+                            name="description"
+                            rows="3"
+                            placeholder="e.g., Focus on testing and validation methods in real-world scenarios"
+                        ></textarea>
+                        <div class="form-text">
+                            Provide more context to help AI better understand your needs
+                        </div>
+                    </div>
+
+                    <!-- Advanced options (collapsible) -->
+                    <div class="mb-4">
+                        <button
+                            class="btn btn-link text-decoration-none p-0"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#advancedOptions"
+                        >
+                            <i class="bi bi-gear"></i> Advanced Options
+                        </button>
+
+                        <div class="collapse mt-3" id="advancedOptions">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="paperCount" class="form-label">
+                                        Initial Papers
+                                    </label>
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        id="paperCount"
+                                        name="paper_count"
+                                        value="10"
+                                        min="5"
+                                        max="50"
+                                    >
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="citationDepth" class="form-label">
+                                        Citation Depth
+                                    </label>
+                                    <select class="form-select" id="citationDepth" name="citation_depth">
+                                        <option value="0">No expansion</option>
+                                        <option value="1" selected>1 level</option>
+                                        <option value="2">2 levels</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-search"></i> Start Search
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Progress display area -->
+                <div id="progressArea" class="mt-4" style="display:none;">
+                    <div class="progress" style="height: 2rem;">
+                        <div
+                            class="progress-bar progress-bar-striped progress-bar-animated"
+                            role="progressbar"
+                            style="width: 100%"
+                        ></div>
+                    </div>
+                    <p class="text-center mt-2 text-muted" id="progressText">
+                        <i class="bi bi-hourglass-split"></i> Searching for papers...
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature description -->
+        <div class="card mt-4 fade-in">
+            <div class="card-header">
+                <i class="bi bi-lightbulb"></i> What Can Blatt Do For You?
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success"></i>
+                                Auto-retrieve relevant papers
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success"></i>
+                                Expand citation network
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success"></i>
+                                AI-powered analysis and scoring
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success"></i>
+                                Interactive relationship graphs
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success"></i>
+                                Export to Excel & BibTeX
+                            </li>
+                            <li class="mb-2">
+                                <i class="bi bi-check-circle text-success"></i>
+                                Multi-round deep exploration
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Form submission handler
+document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Show progress bar
+    showProgress('Searching for papers...');
+
+    // Get form data
+    const formData = new FormData(this);
+
+    // Send search request
+    fetch('{{ url_for("search") }}', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            hideProgress();
+            showError(data.error);
+        } else {
+            // Redirect to results page
+            window.location.href = '/results/' + data.search_id;
+        }
+    })
+    .catch(error => {
+        hideProgress();
+        showError('Network error: ' + error.message);
+    });
+});
+</script>
+{% endblock %}

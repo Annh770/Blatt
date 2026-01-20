@@ -1,0 +1,490 @@
+/*
+ * Ye - Custom Styles
+ */
+
+/* ==================== Global Styles ==================== */
+:root {
+    --primary-color: #7BA670;  /* Grass green - autumn green tone */
+    --secondary-color: #92A888;  /* Gray-green - softer autumn green */
+    --text-color: #333;
+    --bg-color: #f8f9fa;
+    --border-color: #dee2e6;
+    --shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+    /* Autumn color palette - oil painting colors */
+    --palette-yellow1: #ADB780;  /* Olive yellow */
+    --palette-yellow2: #F8C92E;  /* Bright yellow */
+    --palette-orange1: #C68516;  /* Golden orange */
+    --palette-orange2: #C3571D;  /* Deep orange */
+    --palette-beige: #EDD3A0;    /* Beige */
+    --palette-green1: #456B3C;   /* Deep green */
+    --palette-green2: #7BA670;   /* Grass green */
+    --palette-green3: #92A888;   /* Gray-green */
+    --palette-tan: #DCBFAC;      /* Tan */
+    --palette-brown: #50250C;    /* Deep brown */
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text-color);
+    background: #f5f5f0;
+    line-height: 1.6;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Oil painting color palette background - autumn warm tones on left, clean on right */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        /* Autumn color scheme: yellow-green on left, clear red-brown on right (compromise version) */
+        /* Top area - warm and bright: bright yellow → beige → warm brown → amber */
+        radial-gradient(ellipse 50% 38% at 10% 18%, rgba(248, 201, 46, 0.90) 0%, rgba(248, 201, 46, 0.64) 35%, rgba(248, 201, 46, 0.26) 60%, transparent 75%),      /* Bright yellow upper left */
+        radial-gradient(ellipse 65% 55% at 38% 15%, rgba(237, 211, 160, 0.92) 0%, rgba(237, 211, 160, 0.65) 40%, rgba(237, 211, 160, 0.25) 65%, transparent 80%),      /* Beige upper center-left */
+        radial-gradient(ellipse 52% 42% at 64% 18%, rgba(180, 120, 85, 0.82) 0%, rgba(180, 120, 85, 0.58) 38%, rgba(180, 120, 85, 0.22) 62%, transparent 78%),      /* Warm brown upper center-right - reduce size to avoid pollution! */
+        radial-gradient(ellipse 48% 36% at 90% 18%, rgba(210, 150, 50, 0.80) 0%, rgba(210, 150, 50, 0.55) 32%, rgba(210, 150, 50, 0.20) 58%, transparent 72%),       /* Amber upper right - clean and clear! */
+
+        /* Middle area - visual focus: olive yellow → deep orange-red → warm orange → red-brown */
+        radial-gradient(ellipse 50% 55% at 8% 48%, rgba(173, 183, 128, 0.92) 0%, rgba(173, 183, 128, 0.66) 35%, rgba(173, 183, 128, 0.28) 60%, transparent 78%),         /* Olive yellow middle left */
+        radial-gradient(ellipse 48% 52% at 32% 52%, rgba(206, 87, 29, 0.96) 0%, rgba(206, 87, 29, 0.7) 35%, rgba(206, 87, 29, 0.3) 60%, transparent 78%),      /* Deep orange-red #CE571D center-left - visual focus! */
+        radial-gradient(ellipse 48% 45% at 58% 50%, rgba(190, 110, 60, 0.85) 0%, rgba(190, 110, 60, 0.60) 33%, rgba(190, 110, 60, 0.24) 58%, transparent 75%),      /* Warm orange-brown center-right - compromise saturation! */
+        radial-gradient(ellipse 44% 48% at 92% 50%, rgba(170, 95, 65, 0.82) 0%, rgba(170, 95, 65, 0.58) 32%, rgba(170, 95, 65, 0.22) 58%, transparent 72%),      /* Red-brown middle right - reduce size and clear! */
+
+        /* Bottom area - warm ending: tan → beige → golden orange → red-brown */
+        radial-gradient(ellipse 68% 52% at 15% 80%, rgba(220, 191, 172, 0.93) 0%, rgba(220, 191, 172, 0.68) 40%, rgba(220, 191, 172, 0.28) 65%, transparent 80%),      /* Tan bottom left */
+        radial-gradient(ellipse 58% 48% at 42% 82%, rgba(237, 211, 160, 0.92) 0%, rgba(237, 211, 160, 0.67) 40%, rgba(237, 211, 160, 0.27) 65%, transparent 80%),      /* Beige center-bottom-left */
+        radial-gradient(ellipse 56% 46% at 68% 85%, rgba(198, 133, 22, 0.89) 0%, rgba(198, 133, 22, 0.63) 40%, rgba(198, 133, 22, 0.24) 65%, transparent 80%),      /* Golden orange center-bottom-right */
+        radial-gradient(ellipse 44% 38% at 92% 80%, rgba(160, 100, 70, 0.78) 0%, rgba(160, 100, 70, 0.54) 32%, rgba(160, 100, 70, 0.20) 58%, transparent 72%);      /* Red-brown bottom right - clean ending! */
+
+    pointer-events: none;
+    z-index: -1;
+    background-attachment: fixed;
+}
+
+/* Remove dark border - let color blocks transition naturally */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;  /* No longer add shadow layer */
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ==================== Navigation Bar ==================== */
+.navbar {
+    background: linear-gradient(90deg,
+        rgba(237, 211, 160, 0.35) 0%,
+        rgba(255, 255, 255, 0.98) 30%,
+        rgba(255, 255, 255, 0.98) 70%,
+        rgba(146, 168, 136, 0.35) 100%) !important;
+    backdrop-filter: none;  /* Remove navigation bar blur */
+    box-shadow: 0 2px 8px rgba(80, 37, 12, 0.12);
+    padding: 0.216rem 0;  /* Reduce height by 40% further: from 0.36rem to 0.216rem */
+    border-bottom: 2px solid rgba(146, 168, 136, 0.25);
+}
+
+.navbar .container {
+    padding-left: 0;  /* Remove left padding */
+}
+
+.navbar-brand {
+    padding-left: 0;  /* Remove left padding from brand */
+    margin-left: -0.8rem;  /* Move left strongly! */
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--palette-brown) !important;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.navbar-brand:hover {
+    color: var(--primary-color) !important;
+}
+
+/* ==================== Card Styles ==================== */
+.card {
+    border: none;
+    box-shadow: var(--shadow);
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: rgba(255, 252, 245, 0.96);  /* Increase opacity, reduce background penetration */
+    backdrop-filter: none;  /* Completely remove blur effect! */
+    border: 1px solid rgba(220, 191, 172, 0.3);  /* Tan border */
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(80, 37, 12, 0.15);
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--palette-green2) 0%, var(--primary-color) 100%);
+    color: white;
+    font-weight: 600;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+/* ==================== Button Styles ==================== */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    font-weight: 500;
+    padding: 0.6rem 1.5rem;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(46, 125, 50, 0.3);
+}
+
+.btn-success {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+/* ==================== Form Styles ==================== */
+.form-control, .form-select {
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    padding: 0.6rem 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.form-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+/* ==================== Progress Bar ==================== */
+.progress {
+    height: 2rem;
+    border-radius: 6px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    background-color: var(--primary-color);
+    font-weight: 500;
+}
+
+/* ==================== Table Styles ==================== */
+.table {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 1rem;
+}
+
+.table tbody tr {
+    transition: background-color 0.2s;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* ==================== Priority Badges ==================== */
+.badge.bg-success {
+    background-color: #00C853 !important;  /* Priority 5 */
+}
+
+.badge.bg-warning {
+    background-color: #FFD600 !important;  /* Priority 4 */
+    color: #333 !important;
+}
+
+.badge.bg-secondary {
+    background-color: #90CAF9 !important;  /* Priority 3 */
+    color: #333 !important;
+}
+
+/* ==================== Footer ==================== */
+.footer {
+    background-color: white;
+    padding: 2rem 0;
+    margin-top: 4rem;
+    border-top: 1px solid var(--border-color);
+    color: #6c757d;
+}
+
+/* ==================== Loading Animation ==================== */
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3rem;
+    color: var(--primary-color);
+}
+
+/* ==================== Tooltip ==================== */
+.tooltip-inner {
+    background-color: var(--primary-color);
+    font-size: 0.875rem;
+}
+
+.tooltip.bs-tooltip-top .tooltip-arrow::before {
+    border-top-color: var(--primary-color);
+}
+
+/* ==================== Responsive Adjustments ==================== */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.25rem;
+    }
+
+    .card {
+        margin-bottom: 1rem;
+    }
+
+    .btn-lg {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+    }
+}
+
+/* ==================== Animation ==================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* ==================== Custom Scrollbar ==================== */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
+
+/* ==================== Title Styles ==================== */
+.title-with-leaf {
+    font-weight: 700 !important;
+    color: #6B9460 !important;  /* Medium green - between gray-green and deep green */
+    letter-spacing: 0.05em !important;
+    position: relative;
+    display: inline-block;
+    text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.7);  /* Subtle white shadow layer */
+    font-size: 2.2rem !important;  /* Continue reducing "leaf Ye" */
+    line-height: 1.2 !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+/* Static green leaf */
+.static-leaf {
+    display: inline-block;
+    font-size: 2rem;
+    color: #6B9460;  /* Medium green - consistent with text */
+    margin-left: 0.3rem;  /* Spacing between and Ye */
+}
+
+/* ==================== Floating Leaves Upper Left ==================== */
+.floating-leaves {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 25px;
+    margin-right: 0;  /* Stick to left side */
+}
+
+.floating-leaves .leaf {
+    display: inline-block;
+    font-size: 1.6rem;  /* Enlarge leaf size */
+    position: absolute;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.floating-leaves .leaf-1 {
+    left: 0;
+    top: 0;
+    animation: leafFloat1 4s ease-in-out infinite, leafRotate1 5s ease-in-out infinite;
+}
+
+.floating-leaves .leaf-3 {
+    left: 22px;
+    top: 2px;
+    animation: leafFloat3 4.2s ease-in-out infinite 0.8s, leafRotate3 5.5s ease-in-out infinite 0.8s;
+}
+
+/* Floating animation for three leaves */
+@keyframes leafFloat1 {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px);
+    }
+    25% {
+        transform: translateY(-6px) translateX(3px);
+    }
+    50% {
+        transform: translateY(-3px) translateX(-3px);
+    }
+    75% {
+        transform: translateY(-8px) translateX(2px);
+    }
+}
+
+@keyframes leafFloat2 {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px);
+    }
+    25% {
+        transform: translateY(-8px) translateX(-4px);
+    }
+    50% {
+        transform: translateY(-4px) translateX(4px);
+    }
+    75% {
+        transform: translateY(-10px) translateX(-2px);
+    }
+}
+
+@keyframes leafFloat3 {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px);
+    }
+    25% {
+        transform: translateY(-5px) translateX(2px);
+    }
+    50% {
+        transform: translateY(-8px) translateX(-3px);
+    }
+    75% {
+        transform: translateY(-6px) translateX(3px);
+    }
+}
+
+/* Rotation animation for three leaves */
+@keyframes leafRotate1 {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-8deg);
+    }
+    50% {
+        transform: rotate(6deg);
+    }
+    75% {
+        transform: rotate(-4deg);
+    }
+}
+
+@keyframes leafRotate2 {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(10deg);
+    }
+    50% {
+        transform: rotate(-7deg);
+    }
+    75% {
+        transform: rotate(5deg);
+    }
+}
+
+@keyframes leafRotate3 {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-12deg);
+    }
+    50% {
+        transform: rotate(8deg);
+    }
+    75% {
+        transform: rotate(-6deg);
+    }
+}
+
+/* ==================== Subtitle Styles ==================== */
+.subtitle-medium {
+    color: #A0690F !important;  /* Deeper golden orange */
+    font-weight: 500;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+    font-size: 1.3rem !important;  /* Font size for "Academic Paper..." line */
+    margin-bottom: 0.5rem;
+}
+
+.subtitle-small {
+    color: #A0690F !important;  /* Deeper golden orange */
+    font-weight: 400;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem !important;  /* Font size for "Like collecting..." line */
+}
+
+/* Responsive title size */
+@media (max-width: 768px) {
+    .title-with-leaf {
+        font-size: 4rem !important;
+    }
+
+    .floating-leaves {
+        width: 45px;
+        height: 30px;
+    }
+
+    .floating-leaves .leaf {
+        font-size: 1.5rem;
+    }
+}

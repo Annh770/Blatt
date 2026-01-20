@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+
+{% block title %}Results - Blatt{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Page title -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>
+                <i class="bi bi-file-text"></i> Search Results
+            </h2>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left"></i> New Search
+            </a>
+        </div>
+
+        <!-- Search info card -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <strong><i class="bi bi-search"></i> Keywords:</strong>
+                            <span class="badge bg-primary">{{ search.keywords }}</span>
+                        </p>
+                        {% if search.description %}
+                        <p class="mb-2">
+                            <strong><i class="bi bi-card-text"></i> Description:</strong>
+                            {{ search.description }}
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2">
+                            <strong><i class="bi bi-file-earmark-text"></i> Total Papers:</strong>
+                            <span class="text-primary fw-bold">{{ search.total_papers }}</span>
+                        </p>
+                        <p class="mb-2">
+                            <strong><i class="bi bi-check-circle"></i> Relevant Papers (Priority ≥ 4):</strong>
+                            <span class="text-success fw-bold">{{ search.relevant_papers }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download button group -->
+        <div class="mb-4">
+            <div class="btn-group" role="group">
+                <a href="{{ url_for('download', filename='excel/search_' ~ search.id ~ '_papers.xlsx') }}"
+                   class="btn btn-success"
+                   style="background-color: #198754; border-color: #198754;">
+                    <i class="bi bi-file-earmark-excel"></i> Download Excel
+                </a>
+                <a href="{{ url_for('download', filename='bibtex/search_' ~ search.id ~ '_papers.bib') }}"
+                   class="btn btn-info">
+                    <i class="bi bi-file-earmark-code"></i> Download BibTeX
+                </a>
+                <a href="{{ url_for('view_graph', search_id=search.id) }}"
+                   class="btn btn-warning"
+                   target="_blank">
+                    <i class="bi bi-diagram-3"></i> View Graph
+                </a>
+                <button onclick="downloadAllPDFs()"
+                        class="btn btn-danger"
+                        id="downloadAllBtn">
+                    <i class="bi bi-download"></i> Download All PDFs
+                    <span class="badge bg-light text-dark ms-1">{{ papers|length }}</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Paper list -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <i class="bi bi-list-check"></i> Relevant Papers ({{ papers|length }})
+            </div>
+            <div class="card-body p-0">
+                {% if papers %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th width="5%">Priority</th>
+                                <th width="35%">Title</th>
+                                <th width="15%">Author</th>
+                                <th width="8%">Year</th>
+                                <th width="10%">Citations</th>
+                                <th width="17%">Keywords</th>
+                                <th width="10%">Venue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for paper in papers %}
+                            <tr>
+                                <td class="text-center">
+                                    {% if paper.priority >= 5 %}
+                                        <span class="badge bg-success">{{ paper.priority }}</span>
+                                    {% elif paper.priority >= 4 %}
+                                        <span class="badge bg-warning">{{ paper.priority }}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ paper.priority }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if paper.url %}
+                                    <a href="{{ paper.url }}"
+                                       target="_blank"
+                                       class="paper-title-link"
+                                       title="Click to view paper on Semantic Scholar">
+                                        <strong>{{ paper.title }}</strong>
+                                    </a>
+                                    {% else %}
+                                    <strong>{{ paper.title }}</strong>
+                                    {% endif %}
+                                    {% if paper.analysis_reason %}
+                                    <br>
+                                    <small class="text-muted">
+                                        <i class="bi bi-lightbulb"></i> {{ paper.analysis_reason }}
+                                    </small>
+                                    {% endif %}
+                                </td>
+                                <td>{{ paper.first_author }}</td>
+                                <td>{{ paper.year }}</td>
+                                <td>{{ paper.citation_count }}</td>
+                                <td>
+                                    <small>
+                                        {% if paper.matched_keywords %}
+                                            {% set kws = paper.matched_keywords|from_json if paper.matched_keywords is string else paper.matched_keywords %}
+                                            {% for kw in kws[:3] %}
+                                                <span class="badge bg-light text-dark">{{ kw }}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </small>
+                                </td>
+                                <td><small>{{ paper.venue }}</small></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox display-1 text-muted"></i>
+                    <p class="text-muted mt-3">No relevant papers found</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="alert alert-info mt-4" role="alert">
+            <i class="bi bi-info-circle"></i>
+            <strong>Tips:</strong>
+            Click "View Graph" to explore the interactive paper relationship network.
+            Download Excel for detailed analysis, or BibTeX for reference management.
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Paper title link style */
+    .paper-title-link {
+        color: #212529;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .paper-title-link:hover {
+        color: #0d6efd;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    /* Download progress bar style */
+    #downloadProgress {
+        display: none;
+        margin-top: 10px;
+    }
+
+    .download-status {
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// JavaScript helper function for from_json filter
+function parseJSON(str) {
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        return [];
+    }
+}
+
+// Store all papers' URL and DOI information
+const papers = [
+    {% for paper in papers %}
+    {
+        title: {{ paper.title|tojson }},
+        url: {{ paper.url|tojson }},
+        doi: {{ paper.doi|tojson }},
+        paperId: {{ paper.paper_id|tojson }}
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+];
+
+/**
+ * Download all papers' PDFs
+ * Strategy: try multiple sources to get PDFs
+ */
+async function downloadAllPDFs() {
+    const btn = document.getElementById('downloadAllBtn');
+    const originalHTML = btn.innerHTML;
+
+    // Disable button
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Preparing...';
+
+    // Create progress display
+    const progressDiv = document.createElement('div');
+    progressDiv.id = 'downloadProgress';
+    progressDiv.className = 'alert alert-info mt-3';
+    progressDiv.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <strong>Downloading PDFs...</strong>
+            <span id="downloadCounter">0/${papers.length}</span>
+        </div>
+        <div class="progress">
+            <div id="downloadProgressBar" class="progress-bar progress-bar-striped progress-bar-animated"
+                 role="progressbar" style="width: 0%"></div>
+        </div>
+        <div id="downloadStatus" class="download-status text-muted mt-2"></div>
+    `;
+    btn.parentElement.parentElement.appendChild(progressDiv);
+    progressDiv.style.display = 'block';
+
+    let successCount = 0;
+    let failCount = 0;
+
+    // Iterate through all papers
+    for (let i = 0; i < papers.length; i++) {
+        const paper = papers[i];
+        const progress = ((i + 1) / papers.length * 100).toFixed(0);
+
+        // Update progress
+        document.getElementById('downloadCounter').textContent = `${i + 1}/${papers.length}`;
+        document.getElementById('downloadProgressBar').style.width = progress + '%';
+        document.getElementById('downloadStatus').textContent = `Processing: ${paper.title.substring(0, 60)}...`;
+
+        try {
+            // Try to download PDF
+            const downloaded = await tryDownloadPDF(paper, i + 1);
+            if (downloaded) {
+                successCount++;
+            } else {
+                failCount++;
+            }
+        } catch (error) {
+            console.error(`Error downloading paper ${i + 1}:`, error);
+            failCount++;
+        }
+
+        // Add delay to avoid requests too fast
+        await sleep(500);
+    }
+
+    // Complete
+    btn.disabled = false;
+    btn.innerHTML = originalHTML;
+
+    // Show completion info
+    progressDiv.className = 'alert alert-success mt-3';
+    progressDiv.innerHTML = `
+        <strong><i class="bi bi-check-circle"></i> Download Complete!</strong>
+        <p class="mb-0 mt-2">
+            ✅ Successfully opened: ${successCount} papers<br>
+            ⚠️ Unable to access: ${failCount} papers
+        </p>
+        <p class="mb-0 mt-2 text-muted">
+            <small>
+                <i class="bi bi-info-circle"></i>
+                Papers were opened in new tabs. Check your browser's download folder for PDFs.
+                Some papers may require institutional access or manual download from publisher websites.
+            </small>
+        </p>
+    `;
+}
+
+/**
+ * Try to download PDF from multiple sources
+ */
+async function tryDownloadPDF(paper, index) {
+    // Strategy 1: If Semantic Scholar URL available, open new tab
+    if (paper.url) {
+        window.open(paper.url, `_paper_${index}`);
+        return true;
+    }
+
+    // Strategy 2: If DOI available, try accessing via DOI
+    if (paper.doi) {
+        window.open(`https://doi.org/${paper.doi}`, `_paper_${index}`);
+        return true;
+    }
+
+    // Strategy 3: Use Paper ID to build Semantic Scholar URL
+    if (paper.paperId) {
+        const s2Url = `https://www.semanticscholar.org/paper/${paper.paperId}`;
+        window.open(s2Url, `_paper_${index}`);
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * Delay function
+ */
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+</script>
+{% endblock %}
